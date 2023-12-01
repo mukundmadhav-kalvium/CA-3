@@ -5,9 +5,9 @@ let searchBtn = document.getElementById("search-button")
 let resultItems = document.getElementById("meals")
 let modalContent = document.querySelector(".modal-content")
 let randomMealHeading = document.getElementById("random-meal-heading")
-let ingredients_data = document.getElementById("ingredients")
+let ingredientsData = document.getElementById("ingredients")
 let separator = document.getElementById("separator")
-let procedure = document.getElementById("procedure")
+let procedureData = document.getElementById("procedure")
 
 let randomMealUrl = "https://www.themealdb.com/api/json/v1/1/random.php"
 
@@ -24,12 +24,15 @@ async function getRandomMeal(){
 
         randomMealHeading.textContent=`${mealName}`
         for (let i = 1; i <= 20; i++) {
-            if (data.meals[0]['strIngredient' + i] !== "") {
-                ingredients_data.innerHTML += `<li>${data.meals[0]['strIngredient' + i]}</li>`
+            if (data.meals[0]['strIngredient' + i] ) {
+                ingredientsData.innerHTML += `<li>${data.meals[0]['strIngredient' + i]}</li>`
+            }else{
+                break
             }
         }
         
         procedure.innerHTML += `<p>${data.meals[0].strInstructions}</p>`
+
 
     }
     catch(err){
@@ -44,7 +47,8 @@ async function getSearchedMeal(searchBar){
         let inputValue = searchBar.value.trim()
         if (!inputValue) {
             console.log("Input value is empty");
-            resultItems.innerHTML="";
+            resultItems.style.display = "block"
+            resultItems.innerHTML=`<h2>Opps! Search value is empty 😒</h2>`;
             return;
         }
         
@@ -56,16 +60,15 @@ async function getSearchedMeal(searchBar){
         
         if (!meals || meals.length === 0) {
             console.log("No meals found");
-            let div = document.createElement("div")
-            let p = document.createElement("p")
-            p = "No meals found!!!"
-            div.appendChild(p)
-            return;
+            resultItems.style.display = "block"
+            resultItems.innerHTML= `<h2>Sorry, We don't have the recipe of ${inputValue} 😓</h2>`
         }
         
         meals.forEach((item)=>{
             let div = document.createElement("div");
             div.setAttribute("class","container");
+            resultItems.style.display = "grid"
+            div.setAttribute("id", item.idMeal)
             let image = document.createElement("img");
             image.setAttribute("class", "image");
             image.src = item.strMealThumb;
@@ -78,14 +81,29 @@ async function getSearchedMeal(searchBar){
             resultItems.appendChild(div)
             
         })
+
+        let allContainers = document.getElementsByClassName("container")
+        for (i of allContainers){
+            i.addEventListener("click",(e)=>{
+                let id = e.target.id
+                displayPopUp(id)
+
+            })
+        }
     }
     catch(err){
         console.log("error in searched meal function: ",err);
     }
 }
 
+async function displayPopUp(id){
+    let idUrl = await fetch(`https://www.themealdb.com/api/json/v1/1/lookup.php?i=${id}`)
+}
+
 form.addEventListener("submit", (e)=>{e.preventDefault() 
-    getSearchedMeal(searchBar)});
+    getSearchedMeal(searchBar)    
+    resultItems.scrollIntoView({ behavior: "smooth"})
+});
     
     searchBtn.onclick=()=>{
         getSearchedMeal(searchBar);
@@ -95,11 +113,13 @@ form.addEventListener("submit", (e)=>{e.preventDefault()
         document.getElementById("random-meal-container").addEventListener("click", function () {
             // Show the modal
             document.getElementById("myModal").style.display = "flex";
+            document.body.style.overflow = "hidden";
         });
-    
+        
         // Close the modal when the close button or outside the modal is clicked
         document.querySelector(".close").addEventListener("click", function () {
             document.getElementById("myModal").style.display = "none";
+            document.body.style.overflow = "auto";
         });
 
     // Add this part to close the modal when pressing the Escape key
@@ -108,4 +128,3 @@ form.addEventListener("submit", (e)=>{e.preventDefault()
             document.getElementById("myModal").style.display = "none";
         }
     });
-    

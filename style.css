@@ -197,14 +197,18 @@ main p{
 
 .modal-content {
     background-color: #fefefe;
-    margin: 15% auto;
+    margin: 10% auto;
     padding: 20px;
     border: 1px solid #888;
     width: 40%;
+    height: 60vh;
     overflow: auto;
 }
 
 .modal-content h3{
+    font-size: 2rem;
+    font-weight: 900;
+    color: red;
     padding-bottom: 20px;
 }
 
