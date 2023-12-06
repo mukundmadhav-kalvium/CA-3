@@ -22,7 +22,7 @@ async function getRandomMeal() {
     const mealName = data.meals[0].strMeal;
 
     //Appending meal name, meal ingredients, and procedure to the modal of random meal container
-    
+
     randomMealContainer.innerHTML = `
         <img id="random-meal-img" src="${ingredients}" alt="">
         <p id="meal-name">${mealName}</p>`;
@@ -38,9 +38,7 @@ async function getRandomMeal() {
     }
     ingredientsData.innerHTML = string;
     procedure.innerHTML = `<br><h3>Procedure</h3><br><p>${data.meals[0].strInstructions}</p>`;
-  } catch (err) {
-
-  }
+  } catch (err) {}
 }
 
 // Calling Random Meal function
@@ -112,8 +110,7 @@ async function getSearchedMeal(searchBar) {
         displayPopUp(id);
       });
     }
-  } catch (err) {
-  }
+  } catch (err) {}
 }
 
 // Async function to display modal of searched meal
@@ -140,7 +137,7 @@ async function displayPopUp(id) {
   }
   ingredientsData.innerHTML = string;
   procedure.innerHTML = `<br><h3>Procedure</h3><br><p>${data.meals[0].strInstructions}</p>`;
-// Displaying modal using flex and disabling background scroll
+  // Displaying modal using flex and disabling background scroll
   document.getElementById("myModal").style.display = "flex";
   document.body.style.overflow = "hidden";
 }
@@ -181,5 +178,6 @@ document.addEventListener("keydown", function (event) {
     document.getElementById("myModal").style.display === "flex"
   ) {
     document.getElementById("myModal").style.display = "none";
+    document.body.style.overflow = "auto";
   }
 });
